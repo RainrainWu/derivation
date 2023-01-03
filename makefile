@@ -14,3 +14,7 @@ lint:
 .PHONY: test
 test:
 	$(POETRY_RUN) pytest --cov=derivation
+
+.PHONY: build
+build:
+	poetry build
