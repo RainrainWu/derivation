@@ -9,6 +9,12 @@ from derivation.types import VariantLayerT, VariantT
 
 class DerivationGenerator(Generic[VariantLayerT, VariantT]):
 
+    __slots__ = (
+        "__layers",
+        "__func_accumulate",
+        "__constraints",
+    )
+
     ERR_MSG_NO_LAYERS_TO_BE_ACCUMULATED = intern("no layers to be accumulated")
 
     def __init__(

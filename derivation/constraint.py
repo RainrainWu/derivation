@@ -9,12 +9,17 @@ from derivation.types import VariantLayerT
 
 
 class AbstractConstrainable(ABC, Generic[VariantLayerT]):
+
+    __slots__ = ()
+
     @abstractmethod
     def constrain(self, event_labels: tuple[VariantLayerT, ...]) -> None:
         pass  # pragma: no cover
 
 
 class MutuallyExclusiveConstraint(AbstractConstrainable):
+
+    __slots__ = ("__layers_constrained",)
 
     ERR_MSG_LAYERS_CONFLICT = intern("mutually exclusive layers conflict")
 
@@ -34,6 +39,12 @@ class MutuallyExclusiveConstraint(AbstractConstrainable):
 
 
 class OccurrenceConstraint(AbstractConstrainable):
+
+    __slots__ = (
+        "__layers_constrained",
+        "__min_times",
+        "__max_times",
+    )
 
     ERR_MSG_OCCURRENCE_TIMES_OUT_OF_BOUND = intern("occurrence times out of bound")
 
@@ -74,6 +85,11 @@ class OccurrenceConstraint(AbstractConstrainable):
 
 
 class PrerequisiteConstraint(AbstractConstrainable):
+
+    __slots__ = (
+        "__layers_prerequisite",
+        "__layers_subsequent",
+    )
 
     ERR_MSG_LAYERS_NOT_SPECIFIED = intern("prerequisite or subsequent not specified")
     ERR_MSG_INVALID_OVERLAP = intern(
