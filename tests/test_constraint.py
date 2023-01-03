@@ -1,10 +1,8 @@
 import pytest
 
+from derivation.constraint import PrerequisiteConstraint
+from derivation.errors import ConstraintError
 from tests.common import EnumTestLayer
-from variants.constraint import (
-    PrerequisiteConstraint,
-)
-from variants.errors import ConstraintError
 
 
 class TestMutuallyExclusiveConstraint:

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from variants.constraint import PrerequisiteConstraint
+from derivation.constraint import PrerequisiteConstraint
 
 
 class MyLayer(str, Enum):

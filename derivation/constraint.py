@@ -4,8 +4,8 @@ from operator import itemgetter
 from sys import intern
 from typing import Generic, Iterable
 
-from variants.errors import ConstraintError
-from variants.types import VariantLayerT
+from derivation.errors import ConstraintError
+from derivation.types import VariantLayerT
 
 
 class AbstractConstrainable(ABC, Generic[VariantLayerT]):

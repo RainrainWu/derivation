@@ -13,4 +13,4 @@ lint:
 
 .PHONY: test
 test:
-	$(POETRY_RUN) pytest --cov=variants
+	$(POETRY_RUN) pytest --cov=derivation

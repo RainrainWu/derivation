@@ -2,12 +2,12 @@ from functools import lru_cache
 from sys import intern
 from typing import Callable, Generic, Iterable
 
-from variants.constraint import AbstractConstrainable
-from variants.errors import GeneratorError
-from variants.types import VariantLayerT, VariantT
+from derivation.constraint import AbstractConstrainable
+from derivation.errors import GeneratorError
+from derivation.types import VariantLayerT, VariantT
 
 
-class VariantsGenerator(Generic[VariantLayerT, VariantT]):
+class DerivationGenerator(Generic[VariantLayerT, VariantT]):
 
     ERR_MSG_NO_LAYERS_TO_BE_ACCUMULATED = intern("no layers to be accumulated")
 

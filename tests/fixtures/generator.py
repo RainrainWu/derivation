@@ -2,8 +2,8 @@ from operator import or_
 
 import pytest
 
+from derivation.generator import DerivationGenerator
 from tests.common import TEST_LAYERS
-from variants.generator import VariantsGenerator
 
 
 @pytest.fixture(scope="function")
@@ -13,7 +13,7 @@ def fixture_generator_general(
     fixture_prerequisite_constraint,
 ):
 
-    generator = VariantsGenerator(
+    generator = DerivationGenerator(
         TEST_LAYERS,
         or_,
         (

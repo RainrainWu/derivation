@@ -1,11 +1,11 @@
 import pytest
 
-from tests.common import EnumTestLayer
-from variants.constraint import (
+from derivation.constraint import (
     MutuallyExclusiveConstraint,
     OccurrenceConstraint,
     PrerequisiteConstraint,
 )
+from tests.common import EnumTestLayer
 
 
 @pytest.fixture(scope="function")

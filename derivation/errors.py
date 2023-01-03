@@ -1,7 +1,7 @@
 from json import dumps
 
 
-class VariantsError(Exception):
+class DerivationError(Exception):
     def __str__(self) -> str:
 
         if len(self.args) <= 1:
@@ -10,11 +10,11 @@ class VariantsError(Exception):
         return f"{self.args[0]}\n{dumps(self.args[1], indent=2, default=str)}"
 
 
-class ConstraintError(VariantsError):
+class ConstraintError(DerivationError):
 
     pass
 
 
-class GeneratorError(VariantsError):
+class GeneratorError(DerivationError):
 
     pass

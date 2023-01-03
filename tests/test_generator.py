@@ -2,11 +2,11 @@ from unittest import TestCase
 
 import pytest
 
+from derivation.errors import ConstraintError, GeneratorError
 from tests.common import EnumTestLayer
-from variants.errors import ConstraintError, GeneratorError
 
 
-class TestVariantsGenerator:
+class TestDerivationGenerator:
     @pytest.mark.parametrize(
         "layers",
         (
