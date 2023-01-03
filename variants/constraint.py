@@ -1,16 +1,17 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from collections import Counter
+from operator import itemgetter
 from sys import intern
 from typing import Generic, Iterable
-from variants.types import VariantLayerT
+
 from variants.errors import ConstraintError
-from operator import itemgetter
+from variants.types import VariantLayerT
 
 
 class AbstractConstrainable(ABC, Generic[VariantLayerT]):
     @abstractmethod
     def constrain(self, event_labels: tuple[VariantLayerT, ...]) -> None:
-        pass
+        pass  # pragma: no cover
 
 
 class MutuallyExclusiveConstraint(AbstractConstrainable):
@@ -24,7 +25,8 @@ class MutuallyExclusiveConstraint(AbstractConstrainable):
     def constrain(self, layers: Iterable[VariantLayerT], /) -> None:
 
         layers_conflict = self.__layers_constrained.intersection(set(layers))
-        if layers_conflict:
+        if len(layers_conflict) > 1:
+
             raise ConstraintError(
                 self.ERR_MSG_LAYERS_CONFLICT,
                 {"conflict_layers": layers_conflict},
@@ -67,15 +69,18 @@ class OccurrenceConstraint(AbstractConstrainable):
                     "min_times": self.__min_times,
                     "max_times": self.__max_times,
                     "occurrence": occurrence,
-                }
+                },
             )
 
 
 class PrerequisiteConstraint(AbstractConstrainable):
 
     ERR_MSG_LAYERS_NOT_SPECIFIED = intern("prerequisite or subsequent not specified")
-    ERR_MSG_INVALID_OVERLAP = intern("invalid overlap between prerequisite and subsequent")
+    ERR_MSG_INVALID_OVERLAP = intern(
+        "invalid overlap between prerequisite and subsequent"
+    )
     ERR_MSG_FAILED_PREREQUISITE = intern("failed to satisfied with prerequisite")
+    ERR_MSG_PREREQUISITE_NOT_FOUND = intern("prerequisite not found")
 
     def __init__(
         self,
@@ -97,6 +102,7 @@ class PrerequisiteConstraint(AbstractConstrainable):
             )
 
         if overlap := self.__layers_prerequisite.intersection(self.__layers_subsequent):
+
             raise ConstraintError(
                 self.ERR_MSG_INVALID_OVERLAP,
                 {"overlap": overlap},
@@ -104,13 +110,25 @@ class PrerequisiteConstraint(AbstractConstrainable):
 
     def constrain(self, layers: Iterable[VariantLayerT], /) -> None:
 
-        indexes_prerequisite = set()
-        for layer in self.__layers_prerequisite:
-            indexes_prerequisite |= set([idx for idx, val in enumerate(layers) if val == layer])
-
         indexes_subsequent = set()
         for layer in self.__layers_subsequent:
-            indexes_subsequent |= set([idx for idx, val in enumerate(layers) if val == layer])
+            indexes_subsequent |= set(
+                [idx for idx, val in enumerate(layers) if val == layer]
+            )
+
+        if not indexes_subsequent:
+            return
+
+        indexes_prerequisite = set()
+        for layer in self.__layers_prerequisite:
+            indexes_prerequisite |= set(
+                [idx for idx, val in enumerate(layers) if val == layer]
+            )
+
+        if not indexes_prerequisite:
+            raise ConstraintError(
+                self.ERR_MSG_PREREQUISITE_NOT_FOUND,
+            )
 
         if max(indexes_prerequisite) >= min(indexes_subsequent):
             raise ConstraintError(
@@ -118,7 +136,5 @@ class PrerequisiteConstraint(AbstractConstrainable):
                 {
                     "last_prerequisite_index": max(indexes_prerequisite),
                     "first_subsequent_index": min(indexes_subsequent),
-                }
+                },
             )
-
-

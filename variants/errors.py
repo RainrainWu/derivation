@@ -2,7 +2,6 @@ from json import dumps
 
 
 class VariantsError(Exception):
-
     def __str__(self) -> str:
 
         if len(self.args) <= 1:

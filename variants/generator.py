@@ -1,10 +1,10 @@
-from variants.types import VariantLayerT, VariantT
-from typing import Generic, Iterable, Callable, Generator
 from functools import lru_cache
-from itertools import permutations
 from sys import intern
-from variants.errors import GeneratorError
+from typing import Callable, Generic, Iterable
+
 from variants.constraint import AbstractConstrainable
+from variants.errors import GeneratorError
+from variants.types import VariantLayerT, VariantT
 
 
 class VariantsGenerator(Generic[VariantLayerT, VariantT]):
@@ -31,6 +31,12 @@ class VariantsGenerator(Generic[VariantLayerT, VariantT]):
 
     def accumulate(self, layers: Iterable[VariantLayerT]) -> VariantT:
 
+        if not layers:
+            raise GeneratorError(
+                self.ERR_MSG_NO_LAYERS_TO_BE_ACCUMULATED,
+                {"layers": layers},
+            )
+
         self.validate(layers)
 
         return self.__accumulate(layers)
@@ -38,13 +44,9 @@ class VariantsGenerator(Generic[VariantLayerT, VariantT]):
     @lru_cache(maxsize=None)
     def __accumulate(self, layers: Iterable[VariantLayerT]) -> VariantT:
 
-        if not layers:
-            raise GeneratorError(
-                self.ERR_MSG_NO_LAYERS_TO_BE_ACCUMULATED,
-                {"layers": layers},
-            )
-
         if len(layers) == 1:
             return self.__layers[layers[0]]
 
-        return self.__func_accumulate(self.__accumulate(layers[:-1]), self.__layers[layers[-1]])
+        return self.__func_accumulate(
+            self.__accumulate(layers[:-1]), self.__layers[layers[-1]]
+        )
