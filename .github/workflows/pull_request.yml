@@ -1,0 +1,39 @@
+name: Pull Request
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        go: [1.19]
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+
+    - name: Checkout branch
+      uses: actions/checkout@v3
+
+    - uses: actions/setup-go@v3
+      with:
+        go-version: ${{ matrix.go }}
+
+    - name: Lint
+      run: make lint
+
+    - name: Test
+      run: make test
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+    - name: Build
+      run: make build
