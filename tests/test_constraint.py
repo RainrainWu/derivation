@@ -2,7 +2,7 @@ import pytest
 
 from derivation.constraint import PrerequisiteConstraint
 from derivation.errors import ConstraintError
-from tests.common import EnumTestLayer
+from tests.conftest import TestEventAlpha
 
 
 class TestMutuallyExclusiveConstraint:
@@ -10,16 +10,16 @@ class TestMutuallyExclusiveConstraint:
         "layers",
         (
             pytest.param(
-                (EnumTestLayer.ESSENTIALS,),
+                (TestEventAlpha.ESSENTIALS,),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS, EnumTestLayer.OPTIONAL_1),
+                (TestEventAlpha.ESSENTIALS, TestEventAlpha.OPTIONAL_1),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS, EnumTestLayer.OPTIONAL_2),
+                (TestEventAlpha.ESSENTIALS, TestEventAlpha.OPTIONAL_2),
             ),
             pytest.param(
-                (EnumTestLayer.OPTIONAL_2, EnumTestLayer.OPTIONAL_2),
+                (TestEventAlpha.OPTIONAL_2, TestEventAlpha.OPTIONAL_2),
             ),
         ),
     )
@@ -31,10 +31,10 @@ class TestMutuallyExclusiveConstraint:
         "layers",
         (
             pytest.param(
-                (EnumTestLayer.OPTIONAL_2, EnumTestLayer.OPTIONAL_1),
+                (TestEventAlpha.OPTIONAL_2, TestEventAlpha.OPTIONAL_1),
             ),
             pytest.param(
-                (EnumTestLayer.OPTIONAL_1, EnumTestLayer.OPTIONAL_2),
+                (TestEventAlpha.OPTIONAL_1, TestEventAlpha.OPTIONAL_2),
             ),
         ),
     )
@@ -50,10 +50,10 @@ class TestOccurrenceConstraint:
         "layers",
         (
             pytest.param(
-                (EnumTestLayer.ESSENTIALS,),
+                (TestEventAlpha.ESSENTIALS,),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS, EnumTestLayer.OPTIONAL_1),
+                (TestEventAlpha.ESSENTIALS, TestEventAlpha.OPTIONAL_1),
             ),
         ),
     )
@@ -68,7 +68,7 @@ class TestOccurrenceConstraint:
                 (),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS, EnumTestLayer.ESSENTIALS),
+                (TestEventAlpha.ESSENTIALS, TestEventAlpha.ESSENTIALS),
             ),
         ),
     )
@@ -85,21 +85,22 @@ class TestPrerequisiteConstraint:
         (
             pytest.param(
                 (),
-                (EnumTestLayer.OPTIONAL_1,),
+                (TestEventAlpha.OPTIONAL_1,),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS,),
+                (TestEventAlpha.ESSENTIALS,),
                 (),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS, EnumTestLayer.OPTIONAL_1),
-                (EnumTestLayer.OPTIONAL_1, EnumTestLayer.OPTIONAL_2),
+                (TestEventAlpha.ESSENTIALS, TestEventAlpha.OPTIONAL_1),
+                (TestEventAlpha.OPTIONAL_1, TestEventAlpha.OPTIONAL_2),
             ),
         ),
     )
     def test_construct_error(self, layers_prerequisite, layers_subsequent):
 
         with pytest.raises(ConstraintError):
+
             PrerequisiteConstraint(
                 layers_prerequisite,
                 layers_subsequent,
@@ -112,33 +113,33 @@ class TestPrerequisiteConstraint:
                 (),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS,),
+                (TestEventAlpha.ESSENTIALS,),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS, EnumTestLayer.OPTIONAL_1),
+                (TestEventAlpha.ESSENTIALS, TestEventAlpha.OPTIONAL_1),
             ),
             pytest.param(
-                (EnumTestLayer.ESSENTIALS, EnumTestLayer.OPTIONAL_2),
+                (TestEventAlpha.ESSENTIALS, TestEventAlpha.OPTIONAL_2),
             ),
             pytest.param(
                 (
-                    EnumTestLayer.ESSENTIALS,
-                    EnumTestLayer.OPTIONAL_1,
-                    EnumTestLayer.OPTIONAL_2,
+                    TestEventAlpha.ESSENTIALS,
+                    TestEventAlpha.OPTIONAL_1,
+                    TestEventAlpha.OPTIONAL_2,
                 ),
             ),
             pytest.param(
                 (
-                    EnumTestLayer.ESSENTIALS,
-                    EnumTestLayer.OPTIONAL_2,
-                    EnumTestLayer.OPTIONAL_1,
+                    TestEventAlpha.ESSENTIALS,
+                    TestEventAlpha.OPTIONAL_2,
+                    TestEventAlpha.OPTIONAL_1,
                 ),
             ),
             pytest.param(
                 (
-                    EnumTestLayer.ESSENTIALS,
-                    EnumTestLayer.ESSENTIALS,
-                    EnumTestLayer.OPTIONAL_1,
+                    TestEventAlpha.ESSENTIALS,
+                    TestEventAlpha.ESSENTIALS,
+                    TestEventAlpha.OPTIONAL_1,
                 ),
             ),
         ),
@@ -151,19 +152,19 @@ class TestPrerequisiteConstraint:
         "layers",
         (
             pytest.param(
-                (EnumTestLayer.OPTIONAL_1,),
+                (TestEventAlpha.OPTIONAL_1,),
             ),
             pytest.param(
-                (EnumTestLayer.OPTIONAL_2,),
+                (TestEventAlpha.OPTIONAL_2,),
             ),
             pytest.param(
-                (EnumTestLayer.OPTIONAL_1, EnumTestLayer.ESSENTIALS),
+                (TestEventAlpha.OPTIONAL_1, TestEventAlpha.ESSENTIALS),
             ),
             pytest.param(
                 (
-                    EnumTestLayer.ESSENTIALS,
-                    EnumTestLayer.OPTIONAL_1,
-                    EnumTestLayer.ESSENTIALS,
+                    TestEventAlpha.ESSENTIALS,
+                    TestEventAlpha.OPTIONAL_1,
+                    TestEventAlpha.ESSENTIALS,
                 ),
             ),
         ),
@@ -173,3 +174,40 @@ class TestPrerequisiteConstraint:
         with pytest.raises(ConstraintError):
 
             fixture_prerequisite_constraint.constrain(layers)
+
+
+class TestTerminationConstraint:
+    @pytest.mark.parametrize(
+        "layers",
+        (
+            pytest.param(
+                (TestEventAlpha.OPTIONAL_1_1,),
+            ),
+            pytest.param(
+                (TestEventAlpha.OPTIONAL_1_1, TestEventAlpha.OPTIONAL_1_2),
+            ),
+        ),
+    )
+    def test_constrain_valid(self, layers, fixture_prerequisite_constraint):
+
+        fixture_prerequisite_constraint.constrain(layers)
+
+    @pytest.mark.parametrize(
+        "layers",
+        (
+            pytest.param(
+                (),
+            ),
+            pytest.param(
+                (TestEventAlpha.ESSENTIALS,),
+            ),
+            pytest.param(
+                (TestEventAlpha.OPTIONAL_1_1, TestEventAlpha.OPTIONAL_1),
+            ),
+        ),
+    )
+    def test_constrain_invalid(self, layers, fixture_termination_constraint):
+
+        with pytest.raises(ConstraintError):
+
+            fixture_termination_constraint.constrain(layers)

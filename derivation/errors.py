@@ -15,6 +15,11 @@ class ConstraintError(DerivationError):
     pass
 
 
-class GeneratorError(DerivationError):
+class FederationError(DerivationError):
+
+    pass
+
+
+class DerivativeError(DerivationError):
 
     pass

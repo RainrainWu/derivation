@@ -40,6 +40,9 @@ jobs:
     - name: Test
       run: make test
 
+    - name: Vulnerability Scan
+      run: make secure
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:

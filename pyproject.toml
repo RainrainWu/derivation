@@ -7,6 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+mypy = "^0.991"
+safety = "^2.3.5"
+bandit = "^1.7.4"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
@@ -34,6 +37,14 @@ include_trailing_comma = true
 force_grid_wrap = 0
 src_paths = ['derivation', 'tests']
 
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+exclude = [
+    "^tests/.*$",
+]
+
 [tool.pytest.ini_options]
 minversion = "7.0"
 addopts = "-ra -q -n 4 --disable-warnings --asyncio-mode=strict --timeout=300"
@@ -48,6 +59,14 @@ omit = [
 ]
 
 [tool.coverage.report]
-fail_under = 60
+fail_under = 100
 skip_covered = true
 skip_empty = true
+
+[tool.bandit]
+targets = [
+    "derivation",
+]
+exclude_dirs = [
+    "tests",
+]
