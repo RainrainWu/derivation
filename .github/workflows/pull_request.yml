@@ -43,10 +43,15 @@ jobs:
     - name: Vulnerability Scan
       run: make secure
 
-    - name: Upload coverage to Codecov
+    - name: Upload Coverage File to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+
+    - name: Upload Coverage File to Code CLimate
+      uses: paambaati/codeclimate-action@v2.2.4
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_TOKEN }}
 
     - name: Build
       run: make build
