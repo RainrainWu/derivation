@@ -4,7 +4,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/08e384eaba6ad7375e8b/test_coverage)](https://codeclimate.com/github/RainrainWu/derivation/test_coverage)
 [![codecov](https://codecov.io/gh/RainrainWu/derivation/branch/master/graph/badge.svg?token=at8Ckp5iLi)](https://codecov.io/gh/RainrainWu/derivation)
 [![Github Actions](https://github.com/RainrainWu/derivation/actions/workflows/pull_request.yml/badge.svg)](https://github.com/RainrainWu/derivation/actions/workflows/pull_request.yml)
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/derivation.svg)](https://pypi.python.org/pypi/derivation/)
 
 Derivation is a flexible payload generating framework with highly-customizable patterns and rules which raise your efficiency significantly on test case implementation against complicated inputs.
 

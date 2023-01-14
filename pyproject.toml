@@ -6,7 +6,7 @@ authors = ["Rain Wu <rain.wu@appier.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
