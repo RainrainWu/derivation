@@ -21,7 +21,7 @@ test:
 
 .PHONY: secure
 secure:
-	$(POETRY_RUN) safety check --bare --cache -i 51499 -i 51668
+	$(POETRY_RUN) safety check --cache -i 51499
 	$(POETRY_RUN) bandit -q -r -iii -lll -c ${FILE_TOML} .
 
 .PHONY: build
