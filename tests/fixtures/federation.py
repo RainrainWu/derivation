@@ -26,13 +26,13 @@ def fixture_filters():
 def fixture_federation(
     fixture_patterns,
     fixture_filters,
-    fixture_derivative_general,
+    fixture_derivative_alpha,
     fixture_derivative_beta,
 ):
 
     yield Federation[TestPattern, TestFilter, dict](
         {
-            "alpha": fixture_derivative_general,
+            "alpha": fixture_derivative_alpha,
             "beta": fixture_derivative_beta,
         },
         fixture_patterns,

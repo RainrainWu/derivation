@@ -19,7 +19,7 @@ def fixture_events_beta():
 
 
 @pytest.fixture(scope="function")
-def fixture_derivative_general(
+def fixture_derivative_alpha(
     fixture_events_alpha,
     fixture_mutually_exclusive_constraint,
     fixture_occurrence_constraint,

@@ -22,9 +22,9 @@ class TestDerivative:
             ),
         ),
     )
-    def test_validate_success(self, layers, fixture_derivative_general):
+    def test_validate_success(self, layers, fixture_derivative_alpha):
 
-        fixture_derivative_general.validate(layers)
+        fixture_derivative_alpha.validate(layers)
 
     @pytest.mark.parametrize(
         "layers",
@@ -44,11 +44,11 @@ class TestDerivative:
             ),
         ),
     )
-    def test_validate_failed(self, layers, fixture_derivative_general):
+    def test_validate_failed(self, layers, fixture_derivative_alpha):
 
         with pytest.raises(ConstraintError):
 
-            fixture_derivative_general.validate(layers)
+            fixture_derivative_alpha.validate(layers)
 
     @pytest.mark.parametrize(
         "layers, expected",
@@ -74,10 +74,10 @@ class TestDerivative:
             ),
         ),
     )
-    def test_derive(self, layers, expected, fixture_derivative_general):
+    def test_derive(self, layers, expected, fixture_derivative_alpha):
 
         TestCase().assertDictEqual(
-            fixture_derivative_general.derive(layers),
+            fixture_derivative_alpha.derive(layers),
             expected,
         )
 
@@ -89,12 +89,12 @@ class TestDerivative:
             ),
         ),
     )
-    def test_derive_error(self, layers, fixture_derivative_general):
+    def test_derive_error(self, layers, fixture_derivative_alpha):
 
         with pytest.raises(DerivativeError):
 
-            fixture_derivative_general.derive(layers)
+            fixture_derivative_alpha.derive(layers)
 
-    def test_exhaustive(self, fixture_derivative_general):
+    def test_exhaustive(self, fixture_derivative_alpha):
 
-        assert len(tuple(fixture_derivative_general.exhaustive())) == 42
+        assert len(tuple(fixture_derivative_alpha.exhaustive())) == 42
