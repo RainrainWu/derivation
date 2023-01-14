@@ -17,12 +17,12 @@ lint:
 
 .PHONY: test
 test:
-	$(POETRY_RUN) pytest --cov=derivation --cov-report xml:coverage.xml
+	$(POETRY_RUN) pytest --cov=derivation --cov-report xml:coverage.xml --timeout=30
 
 .PHONY: secure
 secure:
 	$(POETRY_RUN) safety check --cache -i 51499
-	$(POETRY_RUN) bandit -q -r -iii -lll -c ${FILE_TOML} .
+	$(POETRY_RUN) bandit -q -r -iii -lll -c ${FILE_TOML} derivation
 
 .PHONY: build
 build:
