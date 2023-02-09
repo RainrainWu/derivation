@@ -1,0 +1,24 @@
+repos:
+
+- repo: local
+  hooks:
+
+  - id: lint
+    name: lint
+    entry: make lint
+    language: system
+    types: [python]
+
+  - id: test
+    name: test
+    entry: make test
+    language: system
+    types: [python]
+    pass_filenames: false
+    always_run: true
+
+  - id: secure
+    name: secure
+    entry: make secure
+    language: system
+    types: [python]

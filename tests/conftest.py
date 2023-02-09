@@ -41,7 +41,13 @@ class TestPattern(TestEvent):
     INVALID = auto()
 
 
+class TestParamsMap(TestEvent):
+
+    ALPHA_BETA = auto()
+    ALPHA_PATCHED = auto()
+
+
 class TestFilter(TestEvent):
 
-    ALPHA_SIZE_GE_3 = auto
+    ALPHA_SIZE_GE_3 = auto()
     BETA_EMPTY = auto()

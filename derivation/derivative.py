@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from enum import Enum
 from operator import __add__
 from sys import intern
 from typing import Callable, Generic, Iterable
@@ -8,6 +7,11 @@ from typing import Callable, Generic, Iterable
 from derivation.common import DerivationT, EventT
 from derivation.constraint import AbstractConstrainable
 from derivation.errors import ConstraintError, DerivativeError
+
+__all__ = (
+    "AbstractDerivable",
+    "Derivative",
+)
 
 
 class AbstractDerivable(ABC, Generic[EventT, DerivationT]):
@@ -99,38 +103,3 @@ class Derivative(AbstractDerivable, Generic[EventT, DerivationT]):
 
         yield from self.__exhaustive(pointer + 1, (*order, self.__events_keys[pointer]))
         yield from self.__exhaustive(pointer + 1, order)
-
-
-class EnumTestLayer(Enum):
-
-    ESSENTIALS = "essentials"
-
-    OPTIONAL_1 = "optional_1"
-    OPTIONAL_2 = "optional_2"
-
-
-class EnumTestLayer2(Enum):
-
-    ESSENTIALS = "essentials"
-
-    OPTIONAL_1 = "optional_1"
-    OPTIONAL_2 = "optional_2"
-
-
-layers_1 = OrderedDict(
-    [
-        (EnumTestLayer.ESSENTIALS, "layer 1 essentials"),
-        (EnumTestLayer.OPTIONAL_1, "layer 1 optional 1"),
-        (EnumTestLayer.OPTIONAL_2, "layer 1 optional 2"),
-    ]
-)
-d1 = Derivative(layers_1, __add__)
-
-layers_2 = OrderedDict(
-    [
-        (EnumTestLayer2.ESSENTIALS, "layer 2 essentials"),
-        (EnumTestLayer2.OPTIONAL_1, "layer 2 optional 1"),
-        (EnumTestLayer2.OPTIONAL_2, "layer 2 optional 2"),
-    ]
-)
-d2 = Derivative(layers_2, __add__)

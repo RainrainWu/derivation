@@ -1,7 +1,7 @@
 import pytest
 
 from derivation.errors import FederationError
-from tests.conftest import TestFilter, TestPattern
+from tests.conftest import TestFilter, TestParamsMap, TestPattern
 
 
 class TestFederation:
@@ -12,7 +12,8 @@ class TestFederation:
             len(
                 tuple(
                     fixture_federation.exhaustive(
-                        TestPattern.COMBINED, (TestFilter.ALPHA_SIZE_GE_3,)
+                        TestPattern.COMBINED,
+                        filters_applied=(TestFilter.ALPHA_SIZE_GE_3,),
                     )
                 )
             )
@@ -22,11 +23,39 @@ class TestFederation:
             len(
                 tuple(
                     fixture_federation.exhaustive(
-                        TestPattern.COMBINED, (TestFilter.BETA_EMPTY,)
+                        TestPattern.COMBINED,
+                        filters_applied=(TestFilter.BETA_EMPTY,),
                     )
                 )
             )
             == 0
+        )
+        assert (
+            len(
+                tuple(
+                    fixture_federation.exhaustive(
+                        TestPattern.COMBINED,
+                        params_maps=(TestParamsMap.ALPHA_PATCHED,),
+                        filters_applied=(TestFilter.ALPHA_SIZE_GE_3,),
+                    )
+                )
+            )
+            == 7
+        )
+        assert (
+            len(
+                tuple(
+                    fixture_federation.exhaustive(
+                        TestPattern.COMBINED,
+                        params_maps=(
+                            TestParamsMap.ALPHA_BETA,
+                            TestParamsMap.ALPHA_PATCHED,
+                        ),
+                        filters_applied=(TestFilter.ALPHA_SIZE_GE_3,),
+                    )
+                )
+            )
+            == 1
         )
 
     def test_federation_failed_pattern_not_registered(self, fixture_federation):

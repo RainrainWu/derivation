@@ -19,6 +19,7 @@ pytest-asyncio = "^0.20.3"
 pytest-timeout = "^2.1.0"
 safety = "^2.3.5"
 bandit = "^1.7.4"
+pre-commit = "^3.0.4"
 
 [build-system]
 requires = ["poetry-core"]
@@ -47,7 +48,7 @@ exclude = [
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q -n 4 --disable-warnings --asyncio-mode=strict --timeout=300"
+addopts = "-ra -q -n auto --disable-warnings --asyncio-mode=strict --timeout=300"
 testpaths = [
     "tests",
 ]

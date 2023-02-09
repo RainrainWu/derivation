@@ -1,5 +1,12 @@
 from json import dumps
 
+__all__ = (
+    "DerivationError",
+    "ConstraintError",
+    "FederationError",
+    "DerivativeError",
+)
+
 
 class DerivationError(Exception):
     def __str__(self) -> str:
