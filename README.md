@@ -8,23 +8,20 @@
 
 Derivation is a flexible payload generating framework with highly-customizable patterns and rules which raise your efficiency significantly on test case implementation against complicated inputs.
 
+[View Page on Pypi >>](https://pypi.org/project/derivation/)
+
 ## Getting Started
 
 ### Derivative
 
-Derivative is the primary object which sorted out all of valid outputs meet the constraints.
+Derivative is the primary object which helps you sort out all of possible results with the given inputs.
 
 > The script below can be executed directly
 ```python
 from enum import Enum, auto
 from operator import or_
 
-from derivation.constraint import (
-    MutuallyExclusiveConstraint,
-    OccurrenceConstraint,
-    PrerequisiteConstraint,
-    TerminationConstraint,
-)
+from derivation.constraint import MutuallyExclusiveConstraint, OccurrenceConstraint
 from derivation.derivative import Derivative
 
 
@@ -34,55 +31,88 @@ class DerivativeEvent(Enum):
         return name.upper()
 
 
-class DerivativeEventAlpha(DerivativeEvent):
+class DerivativeEventExample(DerivativeEvent):
 
     ESSENTIALS = auto()
 
     OPTIONAL_1 = auto()
-    OPTIONAL_1_1 = auto()
-    OPTIONAL_1_2 = auto()
-
     OPTIONAL_2 = auto()
-    OPTIONAL_3 = auto()
 
 
-EVENT_ALPHA = {event: {event.value: None} for event in DerivativeEventAlpha}
+EVENTS_EXAMPLE = {event: {event.value: None} for event in DerivativeEventExample}
 
-derivative = Derivative(
-    EVENT_ALPHA,
-    or_,
+occurrence_constraint = OccurrenceConstraint(
+    (DerivativeEventExample.ESSENTIALS,),
+    min_times=1,
+    max_times=1,
+)
+mutually_exclusive_constraint = MutuallyExclusiveConstraint(
     (
-        OccurrenceConstraint(
-            (DerivativeEventAlpha.ESSENTIALS,),
-            min_times=1,
-            max_times=1,
-        ),
-        MutuallyExclusiveConstraint(
-            (
-                DerivativeEventAlpha.OPTIONAL_1,
-                DerivativeEventAlpha.OPTIONAL_2,
-                DerivativeEventAlpha.OPTIONAL_3,
-            ),
-        ),
-        MutuallyExclusiveConstraint(
-            (DerivativeEventAlpha.OPTIONAL_1_1, DerivativeEventAlpha.OPTIONAL_1_2),
-        ),
-        PrerequisiteConstraint(
-            (DerivativeEventAlpha.OPTIONAL_1,),
-            (DerivativeEventAlpha.OPTIONAL_1_1, DerivativeEventAlpha.OPTIONAL_1_2),
-        ),
-        TerminationConstraint(
-            {
-                DerivativeEventAlpha.OPTIONAL_1_1,
-                DerivativeEventAlpha.OPTIONAL_1_2,
-                DerivativeEventAlpha.OPTIONAL_2,
-                DerivativeEventAlpha.OPTIONAL_3,
-            },
-        ),
+        DerivativeEventExample.OPTIONAL_1,
+        DerivativeEventExample.OPTIONAL_2,
     ),
+)
+derivative = Derivative(
+    EVENTS_EXAMPLE,
+    or_,
+    (occurrence_constraint, mutually_exclusive_constraint),
 )
 
 for order, result in derivative.exhaustive():
 
     print(f"{order}\n{result}\n")
+
 ```
+
+### Constraint
+
+Constraint helps you construct the rules for specific requirements of deriving recipe.
+
+#### Occurrence
+
+Occurrence Constraint make us able to limit the total occurrence times of a specific group of events.
+
+```python
+occurrence_constraint = OccurrenceConstraint(
+    (DerivativeEventExample.ESSENTIALS,),
+    min_times=1,
+    max_times=1,
+)
+
+# pass
+occurrence_constraint.constrain(
+    (DerivativeEventExample.ESSENTIALS, DerivativeEventExample.OPTIONAL_1),
+)
+
+# error
+occurrence_constraint.constrain(
+    (DerivativeEventExample.OPTIONAL_1,),
+)
+```
+
+#### Mutually Exclusive
+
+Occurrence Constraint make us able to avoid conflicts of a specific group of events.
+
+```python
+mutually_exclusive_constraint = MutuallyExclusiveConstraint(
+    (
+        DerivativeEventExample.OPTIONAL_1,
+        DerivativeEventExample.OPTIONAL_2,
+    ),
+)
+
+# pass
+mutually_exclusive_constraint.constrain(
+    (DerivativeEventExample.ESSENTIALS, DerivativeEventExample.OPTIONAL_1),
+)
+
+# error
+mutually_exclusive_constraint.constrain(
+    (DerivativeEventExample.OPTIONAL_1, DerivativeEventExample.OPTIONAL_2),
+)
+```
+
+#### Prerequisite
+
+#### Termination
