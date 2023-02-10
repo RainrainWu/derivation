@@ -152,6 +152,9 @@ class PrerequisiteConstraint(AbstractConstrainable, Generic[EventT]):
         if not indexes_prerequisite:
             raise ConstraintError(
                 self.ERR_MSG_PREREQUISITE_NOT_FOUND,
+                {
+                    "prerequisites": self.__events_prerequisite,
+                },
             )
 
         if max(indexes_prerequisite) >= min(indexes_subsequent):
@@ -182,7 +185,10 @@ class TerminationConstraint(AbstractConstrainable, Generic[EventT]):
             if (termination := tuple(events)[-1]) not in self.__terminations:
                 raise ConstraintError(
                     self.ERR_MSG_INVALID_TERMINATION,
-                    {"termination_given": termination},
+                    {
+                        "termination_given": termination,
+                        "termination_desired": self.__terminations,
+                    },
                 )
 
         except IndexError:

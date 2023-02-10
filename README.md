@@ -115,4 +115,41 @@ mutually_exclusive_constraint.constrain(
 
 #### Prerequisite
 
+Prerequisite Constraint define the ordering and dependencies of valid event series.
+
+```python
+prerequisite_constraint = PrerequisiteConstraint(
+    (DerivativeEventExample.ESSENTIALS,),
+    (DerivativeEventExample.OPTIONAL_1, DerivativeEventExample.OPTIONAL_2),
+)
+
+# pass
+prerequisite_constraint.constrain(
+    (DerivativeEventExample.ESSENTIALS, DerivativeEventExample.OPTIONAL_1),
+)
+
+# error
+prerequisite_constraint.constrain(
+    (DerivativeEventExample.OPTIONAL_2,),
+)
+```
+
 #### Termination
+
+Termination constraints focus on the specific group of termination events.
+
+```python
+termination_constraint = TerminationConstraint(
+    (DerivativeEventExample.OPTIONAL_1, DerivativeEventExample.OPTIONAL_2),
+)
+
+# pass
+termination_constraint.constrain(
+    (DerivativeEventExample.ESSENTIALS, DerivativeEventExample.OPTIONAL_1),
+)
+
+# error
+termination_constraint.constrain(
+    (DerivativeEventExample.ESSENTIALS,),
+)
+```
