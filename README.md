@@ -10,9 +10,7 @@ Derivation is a flexible payload generating framework with highly-customizable p
 
 [View Page on Pypi >>](https://pypi.org/project/derivation/)
 
-## Getting Started
-
-### Derivative
+## Derivative
 
 Derivative is the primary object which helps you sort out all of possible results with the given inputs.
 
@@ -64,11 +62,11 @@ for order, result in derivative.exhaustive():
 
 ```
 
-### Constraint
+## Constraint
 
 Constraint helps you construct the rules for specific requirements of deriving recipe.
 
-#### Occurrence
+### Occurrence
 
 Occurrence Constraint make us able to limit the total occurrence times of a specific group of events.
 
@@ -90,7 +88,7 @@ occurrence_constraint.constrain(
 )
 ```
 
-#### Mutually Exclusive
+### Mutually Exclusive
 
 Occurrence Constraint make us able to avoid conflicts of a specific group of events.
 
@@ -113,7 +111,7 @@ mutually_exclusive_constraint.constrain(
 )
 ```
 
-#### Prerequisite
+### Prerequisite
 
 Prerequisite Constraint define the ordering and dependencies of valid event series.
 
@@ -134,7 +132,7 @@ prerequisite_constraint.constrain(
 )
 ```
 
-#### Termination
+### Termination
 
 Termination constraints focus on the specific group of termination events.
 
@@ -153,3 +151,25 @@ termination_constraint.constrain(
     (DerivativeEventExample.ESSENTIALS,),
 )
 ```
+
+## Federation
+
+Federation objects allow you construct a more complicated structure with multiple derivation instances, as well as a couple of parameters sets and filtering rules.
+
+### Derivatives & Patterns
+
+Federation object allows you pre-register some patterns which describe how should the derivatives combine with each other.
+
+Pattern are generally a callable function and introduce candidates of the derivatives as the parameters, we encourage users define readable variable name for better collaboration.
+
+### Parameters Maps
+
+For the parameters do not require exhausting via a derivative object, parameters maps can be attached as the static values.
+
+### Filters
+
+In order to re-use federation object in many similar scenarios, pre-register filters provide a more flexible approach for fetching candidates with specific features.
+
+## Contribution
+
+= [RainrainWu](https://github.com/RainrainWu)
