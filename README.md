@@ -156,6 +156,11 @@ termination_constraint.constrain(
 
 Federation objects allow you construct a more complicated structure with multiple derivation instances, as well as a couple of parameters sets and filtering rules.
 
+Please refer to the modules below for detailed usages and implementation.
+
+- derivation/federation.py
+- tests/test_federation.py
+
 ### Derivatives & Patterns
 
 Federation object allows you pre-register some patterns which describe how should the derivatives combine with each other.
