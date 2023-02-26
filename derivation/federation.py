@@ -24,9 +24,9 @@ class AbstractFederative(ABC, Generic[PatternT, ParamsMapT, FilterT, DerivationT
         self,
         pattern: PatternT,
         /,
-        params_maps: ParamsMapT | tuple[ParamsMapT, ...] = (),
+        params_maps: Union[ParamsMapT, tuple[ParamsMapT, ...]] = (),
         params_customize: dict[str, Any] = {},
-        filters_applied: FilterT | tuple[FilterT, ...] = (),
+        filters_applied: Union[FilterT, tuple[FilterT, ...]] = (),
     ) -> Iterable[DerivationT]:
         pass  # pragma: no cover
 
