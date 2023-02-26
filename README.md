@@ -156,25 +156,133 @@ termination_constraint.constrain(
 
 Federation objects allow you construct a more complicated structure with multiple derivation instances, as well as a couple of parameters sets and filtering rules.
 
-Please refer to the modules below for detailed usages and implementation.
 
-- derivation/federation.py
-- tests/test_federation.py
+> Append script below to the bottom of the previous example for derivation.
+
+```python
+from derivation.federation import Federation
+
+
+class DerivativePatternExample(DerivativeEvent):
+
+    COMPOSITED = auto()
+
+
+PATTERNS_EXAMPLE = {
+    DerivativePatternExample.COMPOSITED: (
+        lambda slot_1, slot_2, constant, customized: {
+            "slot_1": slot_1,
+            "slot_2": slot_2,
+            "constant": constant,
+            "customized": customized,
+        }
+    )
+}
+
+
+class DerivativeParamsMapExample(DerivativeEvent):
+
+    DEFAULT = auto()
+
+
+PARAMS_MAPS_EXAMPLE = {
+    DerivativeParamsMapExample.DEFAULT: {"constant": "default"},
+}
+
+
+class DerivativeFilterExample(DerivativeEvent):
+
+    RICH_SLOT_1 = auto()
+
+
+FILTERS_EXAMPLE = {
+    DerivativeFilterExample.RICH_SLOT_1: lambda x: len(x["slot_1"]) > 1,
+}
+
+federation = Federation[
+    DerivativePatternExample,
+    DerivativeParamsMapExample,
+    DerivativeFilterExample,
+    dict,
+](
+    {"slot_1": derivative, "slot_2": derivative},
+    PATTERNS_EXAMPLE,
+    PARAMS_MAPS_EXAMPLE,
+    FILTERS_EXAMPLE,
+)
+
+for composited_result in federation.exhaustive(
+    DerivativePatternExample.COMPOSITED,
+    (DerivativeParamsMapExample.DEFAULT,),
+    {"customized": "customized"},
+    (DerivativeFilterExample.RICH_SLOT_1,),
+):
+
+    print(f"{composited_result}\n")
+```
 
 ### Derivatives & Patterns
 
 Federation object allows you pre-register some patterns which describe how should the derivatives combine with each other.
 
-Pattern are generally a callable function and introduce candidates of the derivatives as the parameters, we encourage users define readable variable name for better collaboration.
+Pattern are generally a callable function and introduce candidates of the derivatives or apply fixed value as the parameters, we encourage users define readable variable name for better collaboration.
+
+```python
+PATTERNS_EXAMPLE = {
+    DerivativePatternExample.COMPOSITED: (
+
+        # Callable object as pre-defined pattern.
+        lambda slot_1, slot_2, constant, customized: {
+            "slot_1": slot_1,
+            "slot_2": slot_2,
+            "constant": constant,
+            "customized": customized,
+        }
+    )
+}
+```
 
 ### Parameters Maps
 
-For the parameters do not require exhausting via a derivative object, parameters maps can be attached as the static values.
+For the parameters do not require exhausting via a derivative object, parameters maps can be attached as the fixed values.
+
+```python
+PARAMS_MAPS_EXAMPLE = {
+
+    # Apply fixed string object "default" to `constant` parameter inside patterns
+    DerivativeParamsMapExample.DEFAULT: {"constant": "default"},
+}
+```
 
 ### Filters
 
 In order to re-use federation object in many similar scenarios, pre-register filters provide a more flexible approach for fetching candidates with specific features.
 
+```python
+FILTERS_EXAMPLE = {
+
+    # Only allow results which contain more than one item in slot_1.
+    DerivativeFilterExample.RICH_SLOT_1: lambda x: len(x["slot_1"]) > 1,
+}
+```
+
+### Customized Parameters
+
+Temporary parameters right inside each exhaustive iterator are also supported, which can help you achieve much more flexible design against edge cases.
+
+```python
+for composited_result in federation.exhaustive(
+    DerivativePatternExample.COMPOSITED,
+    (DerivativeParamsMapExample.DEFAULT,),
+
+    # Temporary parameters only take effects within this iterator.
+    {"customized": "customized"},
+    (DerivativeFilterExample.RICH_SLOT_1,),
+):
+
+    print(f"{composited_result}\n")
+```
+
 ## Contribution
 
-= [RainrainWu](https://github.com/RainrainWu)
+- [RainrainWu](https://github.com/RainrainWu)

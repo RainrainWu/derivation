@@ -4,7 +4,7 @@ from operator import __add__
 from sys import intern
 from typing import Callable, Generic, Iterable
 
-from derivation.common import DerivationT, EventT
+from derivation.common import DerivationT, EventT, adapt_iterable
 from derivation.constraint import AbstractConstrainable
 from derivation.errors import ConstraintError, DerivativeError
 
@@ -48,7 +48,7 @@ class Derivative(AbstractDerivable, Generic[EventT, DerivationT]):
         events: OrderedDict[EventT, DerivationT],
         func_derive: Callable[[DerivationT, DerivationT], DerivationT],
         /,
-        constraints: Iterable[AbstractConstrainable] = (),
+        constraints: AbstractConstrainable | Iterable[AbstractConstrainable] = (),
     ) -> None:
 
         self.__events = events
@@ -56,7 +56,7 @@ class Derivative(AbstractDerivable, Generic[EventT, DerivationT]):
         self.__events_count = len(self.__events_keys)
         self.__func_derive = func_derive
 
-        self.__constraints = constraints
+        self.__constraints = adapt_iterable(constraints)
 
     def validate(self, events: tuple[EventT, ...]) -> None:
 

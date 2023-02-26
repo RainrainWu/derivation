@@ -5,7 +5,7 @@ from operator import itemgetter, or_
 from sys import intern
 from typing import Any, Callable, Generic, Iterable
 
-from derivation.common import DerivationT, FilterT, ParamsMapT, PatternT
+from derivation.common import DerivationT, FilterT, ParamsMapT, PatternT, adapt_iterable
 from derivation.derivative import Derivative
 from derivation.errors import FederationError
 
@@ -24,9 +24,9 @@ class AbstractFederative(ABC, Generic[PatternT, ParamsMapT, FilterT, DerivationT
         self,
         pattern: PatternT,
         /,
-        params_maps: tuple[ParamsMapT, ...] = (),
+        params_maps: ParamsMapT | tuple[ParamsMapT, ...] = (),
         params_customize: dict[str, Any] = {},
-        filters_applied: tuple[FilterT, ...] = (),
+        filters_applied: FilterT | tuple[FilterT, ...] = (),
     ) -> Iterable[DerivationT]:
         pass  # pragma: no cover
 
@@ -108,9 +108,9 @@ class Federation(
         self,
         pattern: PatternT,
         /,
-        params_maps: tuple[ParamsMapT, ...] = (),
+        params_maps: ParamsMapT | tuple[ParamsMapT, ...] = (),
         params_customize: dict[str, Any] = {},
-        filters_applied: tuple[FilterT, ...] = (),
+        filters_applied: FilterT | tuple[FilterT, ...] = (),
     ) -> Iterable[DerivationT]:
 
         try:
@@ -122,16 +122,21 @@ class Federation(
             )
 
         params_desired = signature(func_federate).parameters.keys()
-        params_mapped = self.__collect_params(params_maps, params_customize)
+        params_mapped = self.__collect_params(
+            adapt_iterable(params_maps),
+            params_customize,
+        )
         params_derived = self.__derivatives.keys()
 
-        if set(params_desired) - (set(params_mapped) | set(params_derived)):
-            raise FederationError
+        if params_left := (
+            set(params_desired) - (set(params_mapped) | set(params_derived))
+        ):
+            raise FederationError(f"failed to resolve parameters: {params_left}")
 
         yield from self.__get_filtered_candidates(
             func_federate,
             params_mapped,
-            filters_applied,
+            adapt_iterable(filters_applied),
         )
 
     def __exhaustive(
