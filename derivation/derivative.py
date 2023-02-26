@@ -48,7 +48,7 @@ class Derivative(AbstractDerivable, Generic[EventT, DerivationT]):
         events: OrderedDict[EventT, DerivationT],
         func_derive: Callable[[DerivationT, DerivationT], DerivationT],
         /,
-        constraints: AbstractConstrainable | Iterable[AbstractConstrainable] = (),
+        constraints: Iterable[AbstractConstrainable] = (),
     ) -> None:
 
         self.__events = events
