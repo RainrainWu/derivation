@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections import OrderedDict
 from operator import __add__
 from sys import intern
-from typing import Callable, Generic, Iterable
+from typing import Callable, Generic, Iterable, Union
 
 from derivation.common import DerivationT, EventT, adapt_iterable
 from derivation.constraint import AbstractConstrainable
@@ -48,7 +48,7 @@ class Derivative(AbstractDerivable, Generic[EventT, DerivationT]):
         events: OrderedDict[EventT, DerivationT],
         func_derive: Callable[[DerivationT, DerivationT], DerivationT],
         /,
-        constraints: Iterable[AbstractConstrainable] = (),
+        constraints: Union[AbstractConstrainable, Iterable[AbstractConstrainable]] = (),
     ) -> None:
 
         self.__events = events

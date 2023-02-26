@@ -3,7 +3,7 @@ from functools import reduce
 from inspect import signature
 from operator import itemgetter, or_
 from sys import intern
-from typing import Any, Callable, Generic, Iterable
+from typing import Any, Callable, Generic, Iterable, Union
 
 from derivation.common import DerivationT, FilterT, ParamsMapT, PatternT, adapt_iterable
 from derivation.derivative import Derivative
@@ -108,9 +108,9 @@ class Federation(
         self,
         pattern: PatternT,
         /,
-        params_maps: ParamsMapT | tuple[ParamsMapT, ...] = (),
+        params_maps: Union[ParamsMapT, tuple[ParamsMapT, ...]] = (),
         params_customize: dict[str, Any] = {},
-        filters_applied: FilterT | tuple[FilterT, ...] = (),
+        filters_applied: Union[FilterT, tuple[FilterT, ...]] = (),
     ) -> Iterable[DerivationT]:
 
         try:
